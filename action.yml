@@ -1,28 +1,30 @@
-name: 'GitHub PR Content Checker'
-description: 'Checks PR body and diff for word occurrences'
-author: 'jsoares'
+name: "GitHub PR Content Checker"
+description: "Checks PR body and diff for word occurrences"
+author: "jsoares"
 branding:
-  icon: 'git-pull-request'
-  color: 'gray-dark'
+  icon: "git-pull-request"
+  color: "gray-dark"
 inputs:
   github-token:
-    description: 'Github token, added magically'
+    description: "Github token, added magically"
   bodyContains:
-    description: 'String that must be in the PR body'
+    description: "String that must be in the PR body"
   bodyDoesNotContain:
-    description: 'String that must not be in the PR body'
+    description: "String that must not be in the PR body"
   diffContains:
-    description: 'String that must be in the PR diff'
+    description: "String that must be in the PR diff"
   diffDoesNotContain:
-    description: 'String that must not be in the PR diff'
+    description: "String that must not be in the PR diff"
+  diffDoesNotContainCount:
+    description: "Times the diff can appear before failing"
   maxLinesChanged:
-    description: 'Max number of lines changed per PR'
+    description: "Max number of lines changed per PR"
   maxFilesChanged:
-    description: 'Max number of files changed per PR'
+    description: "Max number of files changed per PR"
 outputs:
   diff:
     description: "Lines added to the PR"
 
 runs:
-  using: 'node12'
-  main: 'dist/index.js'
+  using: "node12"
+  main: "dist/index.js"

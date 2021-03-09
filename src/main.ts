@@ -34,17 +34,17 @@ async function run() {
 
     // Check that no more than the specified number of files were changed
     const maxFilesChanged = core.getInput('maxFilesChanged')
-  	if ( maxFilesChanged && files.length > maxFilesChanged ) {
-      core.setFailed( "The PR shouldn not change more than " + maxFilesChanged + " file(s)");
-  	}
+    if (maxFilesChanged && files.length > maxFilesChanged) {
+      core.setFailed("The PR shouldn not change more than " + maxFilesChanged + " file(s)");
+    }
 
     // Get changed chunks
     var changes = ''
     var additions: number = 0
-    files.forEach(function(file) {
+    files.forEach(function (file) {
       additions += file.additions
-      file.chunks.forEach(function(chunk) {
-        chunk.changes.forEach(function(change) {
+      file.chunks.forEach(function (chunk) {
+        chunk.changes.forEach(function (change) {
           if (change.add) {
             changes += change.content
           }
@@ -66,8 +66,14 @@ async function run() {
 
     // Check that the pull request diff does not contain the forbidden string
     const diffDoesNotContain = core.getInput('diffDoesNotContain')
+    const diffDoesNotContainCount = parseInt(core.getInput('diffDoesNotContainCount') || 5, 10)
+
     if (diffDoesNotContain && changes.includes(diffDoesNotContain)) {
-      core.setFailed("The PR diff should not include " + diffDoesNotContain);
+      const timesFound = (changes.match(new RegExp(diffDoesNotContain, "g")) || []).length;
+
+      if (timesFound > diffDoesNotContainCount) {
+        core.setFailed("The PR diff should not include " + diffDoesNotContain);
+      }
     }
 
   } catch (error) {
