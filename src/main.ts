@@ -9,6 +9,8 @@ async function run() {
     const octokit = github.getOctokit(token)
     const context = github.context
 
+    console.log('context.payload.pull_request', context.payload.pull_request)
+
     // Check that the pull request description contains the required string
     const bodyContains = core.getInput('bodyContains')
     if (bodyContains && !context.payload.pull_request.body.includes(bodyContains)) {
@@ -71,6 +73,10 @@ async function run() {
     if (diffDoesNotContain && changes.includes(diffDoesNotContain)) {
       const timesFound = (changes.match(new RegExp(diffDoesNotContain, "g")) || []).length;
 
+      console.log('??', {
+        timesFound,
+        diffDoesNotContainCount
+      })
       if (timesFound > diffDoesNotContainCount) {
         core.setFailed("The PR diff should not include " + diffDoesNotContain);
       }
