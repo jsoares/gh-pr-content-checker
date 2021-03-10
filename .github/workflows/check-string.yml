@@ -7,8 +7,8 @@ jobs:
     runs-on: ubuntu-latest
     name: Check for forbidden string
     steps:
-    - name: Scan forbidden string
-      uses: jsoares/gh-pr-content-checker@master
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        diffDoesNotContain: 'bad string'
+      - name: Scan forbidden string
+        uses: StephenDocP/gh-pr-content-checker@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          diffDoesNotContain: "bad string"

@@ -9,19 +9,7 @@ async function run() {
     const octokit = github.getOctokit(token)
     const context = github.context
 
-    console.log('context.payload.pull_request', context.payload.pull_request)
-
-    // Check that the pull request description contains the required string
-    const bodyContains = core.getInput('bodyContains')
-    if (bodyContains && !context.payload.pull_request.body.includes(bodyContains)) {
-      core.setFailed("The PR description should include " + bodyContains)
-    }
-
-    // Check that the pull request description does not contain the forbidden string
-    const bodyDoesNotContain = core.getInput('bodyDoesNotContain')
-    if (bodyDoesNotContain && context.payload.pull_request.body.includes(bodyDoesNotContain)) {
-      core.setFailed("The PR description should not include " + bodyDoesNotContain);
-    }
+    core.debug('context.payload.pull_request', context.payload.pull_request)
 
     // Request the pull request diff from the GitHub API
     const { data: prDiff } = await octokit.pulls.get({
@@ -33,12 +21,6 @@ async function run() {
       },
     });
     const files = parse(prDiff)
-
-    // Check that no more than the specified number of files were changed
-    const maxFilesChanged = core.getInput('maxFilesChanged')
-    if (maxFilesChanged && files.length > maxFilesChanged) {
-      core.setFailed("The PR shouldn not change more than " + maxFilesChanged + " file(s)");
-    }
 
     // Get changed chunks
     var changes = ''
@@ -54,18 +36,6 @@ async function run() {
       })
     })
 
-    // Check that no more than the specified number of lines have changed
-    const maxLinesChanged = +core.getInput('maxLinesChanged')
-    if (maxLinesChanged && (additions > maxLinesChanged)) {
-      core.setFailed("The PR shouldn not change more than " + maxLinesChanged + " lines(s) ");
-    }
-
-    // Check that the pull request diff constains the required string
-    const diffContains = core.getInput('diffContains')
-    if (diffContains && !changes.includes(diffContains)) {
-      core.setFailed("The PR diff should include " + diffContains);
-    }
-
     // Check that the pull request diff does not contain the forbidden string
     const diffDoesNotContain = core.getInput('diffDoesNotContain')
     const diffDoesNotContainCount = parseInt(core.getInput('diffDoesNotContainCount') || 5, 10)
@@ -73,7 +43,7 @@ async function run() {
     if (diffDoesNotContain && changes.includes(diffDoesNotContain)) {
       const timesFound = (changes.match(new RegExp(diffDoesNotContain, "g")) || []).length;
 
-      console.log('??', {
+      core.debug('??', {
         timesFound,
         diffDoesNotContainCount
       })

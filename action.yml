@@ -1,6 +1,6 @@
-name: "GitHub PR Content Checker"
-description: "Checks PR body and diff for word occurrences"
-author: "jsoares"
+name: "GitHub PR Diff checker"
+description: "Checks PR body and diff for word occurrences. Can be disabled using a label"
+author: "DocPlanner"
 branding:
   icon: "git-pull-request"
   color: "gray-dark"
